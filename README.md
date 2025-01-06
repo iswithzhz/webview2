@@ -5,8 +5,8 @@ Allow VFP 9 to freely invoke Microsoft's proprietary technology, allowing develo
   NET Framework 4.62 | VFP9.0 7423
   
 # The required file packages for starting the VFP version are as follows:
-\win-x64\WebView2Loader.dll    			
-\win-x86\WebView2Loader.dll    	
+\win-x64\WebView2Loader.dll
+\win-x86\WebView2Loader.dll
 \WebView2.dl    						guid：{0c8340ef-b207-4c3f-9390-71eb8e7b5b95}
 \Microsoft.Web.WebView2.Core.dll
 \Microsoft.Web.WebView2.WinForms.dll
