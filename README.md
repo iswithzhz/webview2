@@ -8,7 +8,7 @@ Allow VFP 9 to freely invoke Microsoft's proprietary technology, allowing develo
 The DLLs required for publishing are: ClrHost.dll, WebView2.dll, WebView2Loader.dll, and WebView2.tlb.
 
 # How to start?
-
+For Windows 7:
 It is necessary to install ndp462.exe. Additionally, the WebView2 runtime must be checked. If not present, execute MicrosoftEdgeWebview2Setup.exe for installation, or use the fixed runtime.
 
 For Windows 10:
