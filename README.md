@@ -5,10 +5,17 @@ Allow VFP 9 to freely invoke Microsoft's proprietary technology, allowing develo
   NET Framework 4.62 | VFP9.0 7423
   
 # The required file packages for starting the VFP version are as follows:
-\win-x64\WebView2Loader.dll
-\win-x86\WebView2Loader.dll
-\WebView2.dl    						guid：{0c8340ef-b207-4c3f-9390-71eb8e7b5b95}
-\Microsoft.Web.WebView2.Core.dll
-\Microsoft.Web.WebView2.WinForms.dll
+The DLLs required for publishing are: ClrHost.dll, WebView2.dll, WebView2Loader.dll, and WebView2.tlb.
+
 # How to start?
-After successfully installing Microsoft Edge Webview2Setup.exe, you can start running the form file
+
+It is necessary to install ndp462.exe. Additionally, the WebView2 runtime must be checked. If not present, execute MicrosoftEdgeWebview2Setup.exe for installation, or use the fixed runtime.
+
+For Windows 10:
+The WebView2 runtime must be checked. If not present, execute MicrosoftEdgeWebview2Setup.exe for installation, or use the fixed runtime.
+
+For Windows 11:
+It can be used directly without any installation.
+
+# Copyright Notice
+WebView2 follows the MIT License, which is a permissive open-source license that allows free use, modification, and distribution. You can freely use WebView2 in commercial projects without the need to disclose your source code or pay licensing fees.
