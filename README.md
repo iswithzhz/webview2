@@ -18,4 +18,5 @@ For Windows 11:
 It can be used directly without any installation.
 
 # Copyright Notice
-WebView2 follows the MIT License, which is a permissive open-source license that allows free use, modification, and distribution. You can freely use WebView2 in commercial projects without the need to disclose your source code or pay licensing fees.
+WebView2 follows the MIT License, which is a permissive open-source license that allows free use, modification, and distribution. You can freely use WebView2 in commercial projects without the need to disclose your source code or pay licensing fees. it should be noted that there is no explicit declaration stating that this is not a free project, and distributing the EXE may require proper authorization.
+
