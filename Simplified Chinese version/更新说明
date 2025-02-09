@@ -66,16 +66,15 @@
 
 *--绑定“oWebView2_Events”事件类
 *	If Pemstatus( this.oWebview2_events , 'CoreWebView2Events_OnInitCompleted' , 5 )  And ;
-*	   Pemstatus( this				    , 'OnInitCompleted'					   , 5 )  Then  
-
-*	   Bindevent( this.oWebview2_events , 'CoreWebView2Events_OnInitCompleted' 			, This , 'OnInitCompleted' )
+*	   Pemstatus( this		    , 'OnInitCompleted'			   , 5 )  Then  
+*	   Bindevent( this.oWebview2_events , 'CoreWebView2Events_OnInitCompleted'  , This , 'OnInitCompleted' )
 *	Endif 
 *	关于COM+的任何异常,在This.oWebView2.GetlogPath(),来获取得到异常日志路径，SetlogPath() 设置异常路径日志（每次都需要的话） 废除
 
 *-- V.1.0.3 200230309
 *	增加一个函数方法：“oWebview2.CheckWebView2Exist()”主要用来检测客户是否有安装“WebView2”的运行时刻。
 *	增加一个模块	 ：webview_echarts简单交互版.scx 与 echarts_demo.prg 这个表单主要功能为Echarts交互功能，细节请查看这个表单的about及相关方法注释
-													*echarts_demo.prg中echarts_demo1对应表单：“webview_echarts简单交互版”第一个按钮，它的js调用为oEcharts方式。
+	*echarts_demo.prg中echarts_demo1对应表单：“webview_echarts简单交互版”第一个按钮，它的js调用为oEcharts方式。
 
 *	增加一个模块：webview_echarts自动刷新.scx   用于SQL自动后台刷新
 *	去掉log日志,您可以删除WebView2Log目录
@@ -86,7 +85,7 @@
 *	如需更多请更改本类“wm_onclick”方法（因为二者绑在在一起的）
 *	增加 一个事件：“OnBasicAuthenticationRequested”
 *	修正 WebView放进多级容器时位置会错乱，祥细请查看事件“ReSize”说明
-*	原生方法：oWebview2vfp.ProductVersion 												访问：WebView2Loader版本号
+*	原生方法：oWebview2vfp.ProductVersion 	访问：WebView2Loader版本号
 *	原生方法：oWebview2vfp.CoreWebView2.PostWebMessageAsJson	( string As json   )	
 *	原生方法：oWebview2vfp.CoreWebView2.PostWebMessageAsString ( string As string )
 *	原生方法：oWebview2vfp.CoreWebView2.Reload()							
@@ -116,35 +115,35 @@
 *	将"CoreWebView2"原属于内部方法包装成该类方法与属性方便调用
 *	增加一个响应页面键盘消息Js脚本
 *	20240721 完成Dll免注册 
-*	方法重命名：“ExecuteScript” 							- > “ExecuteScriptAsync”    					-> 事件“OnExecuteScript”;
-				 “GetCookies”    							- > “GetCookiesAsync”   	  					-> 事件“OnGetCookies”   ;
-				 “AddscriptToExecuteOnDocumentCreated” 	- > “AddscriptToExecuteOnDocumentCreatedAsync”-> 事件“OnAddscriptToExecuteOnDocumentCreated”
+*	方法重命名：“ExecuteScript”  - > “ExecuteScriptAsync”   - > 事件“OnExecuteScript”;
+		   “GetCookies”    			       - > “GetCookiesAsync”   	  		     -> 事件“OnGetCookies”   ;
+		  “AddscriptToExecuteOnDocumentCreated”        - > “AddscriptToExecuteOnDocumentCreatedAsync”-> 事件“OnAddscriptToExecuteOnDocumentCreated”
 			 
 *函数说明   
-*	 “PrintToPdfAsync” 						- > Html2Pdf ->  完成触发“OnPrintCompleted”事件;
-*	 “CallDevToolsProtocolMethodAsync”		- > 允许你异步调用 WebView 的开发者工具协议（DevTools Protocol）上的方法。这个方法允许你从你的应用程序中直接与 WebView 的浏览器引擎通信 完成触发“OnCallDevToolsProtocolMethod” 事件;
-*	 “Base64ToBytes”							- > 将Base64二进制数据字符串 转二进数据字节 = Createbinary( Strconv( Base64Str , 13 ) );
+*	 “PrintToPdfAsync” 			  - > Html2Pdf ->  完成触发“OnPrintCompleted”事件;
+*	 “CallDevToolsProtocolMethodAsync”	  - > 允许你异步调用 WebView 的开发者工具协议（DevTools Protocol）上的方法。这个方法允许你从你的应用程序中直接与 WebView 的浏览器引擎通信 完成触发“OnCallDevToolsProtocolMethod” 事件;
+*	 “Base64ToBytes”			  - > 将Base64二进制数据字符串 转二进数据字节 = Createbinary( Strconv( Base64Str , 13 ) );
 *	 “AddWebResourceRequestedFilter”          - > 添加自定义过滤器拦截;
-*	 “RemoveWebResourceRequestedFilter”		- > 移除自定义过滤器拦截;
-*	 “ClearBrowsingData”						- > 清除浏览数据;
-*	 “AddHostObjectToScript”					- > 将一个_VFP 对象添加到 JavaScript 环境中;
-*	 “RemoveHostObjectFromScript”				- > 从 WebView2 的脚本环境中移除一个宿主对象;
-*	 “ExecuteScript”							- > 执行Js脚本,由“OnExecuteScript”事件响应;
-*	 “AddorUpdateCookie”						- > 添加或更新Cookie;
-*	 “CreateCookie”							- > 创建一个新的Cookie; 派生类“CoreWebView2Cookie” 参数( 名称,值,域,路径);
-*	 “CreateStream”							- > 创建一个内存流，派生类“MemoryStream”;
-*	 “CreateStreamReader”						- > 创建一个内存流类，派生类“StreamReader”;
-*	 “CreateWebResourceRequest”			    - > 创建一个派生类“CoreWebView2WebResourceRequest”对象，设置其属性，并使用它来发起网络请求 参数(uri,Method,PostData,Headers);
-*	 “DeleteCookie”							- > 从域中删除所有 cookie;
-*	 “DeleteCookie”							- > 从域中删除 cookie;
-*	 “Deletecookies”						    - > 从域中删除 cookie;
-*	 “Navigate”								- > 导航到指定的URL;
-*	 “NavigateToString”						- > 可以通过NavigateToString方法来加载一个字符串作为HTML内容;
-*	 “NavigateWithWebResourceRequest”			- > 导航到指定 URI 的方法，它允许你在发送请求之前修改这个请求 这个方法可以用于注入 headers、cookies 或者其他自定义的 HTTP 请求数据。参数( “CoreWebView2WebResourceRequest” );
-*	 “PostWebMessageAsJson”					- > 注入脚本后，在VFP利用"PostWebMessageAsJson"发送给WebView;				
-*	 “PostWebMessageAsString”					- > 注入脚本后，在VFP利用"PostWebMessageAsJson"发送给WebView;	
-*	 “ProductVersion”							- > WebView2包装器“WebView2Loader.dll”文件版本号;
-*	 “Reload”									- > 重新加载当前显示的内容可以通过调用
+*	 “RemoveWebResourceRequestedFilter”	  - > 移除自定义过滤器拦截;
+*	 “ClearBrowsingData”			  - > 清除浏览数据;
+*	 “AddHostObjectToScript”		  - > 将一个_VFP 对象添加到 JavaScript 环境中;
+*	 “RemoveHostObjectFromScript”		  - > 从 WebView2 的脚本环境中移除一个宿主对象;
+*	 “ExecuteScript”			  - > 执行Js脚本,由“OnExecuteScript”事件响应;
+*	 “AddorUpdateCookie”			  - > 添加或更新Cookie;
+*	 “CreateCookie”				  - > 创建一个新的Cookie; 派生类“CoreWebView2Cookie” 参数( 名称,值,域,路径);
+*	 “CreateStream”				  - > 创建一个内存流，派生类“MemoryStream”;
+*	 “CreateStreamReader”			  - > 创建一个内存流类，派生类“StreamReader”;
+*	 “CreateWebResourceRequest”		  - > 创建一个派生类“CoreWebView2WebResourceRequest”对象，设置其属性，并使用它来发起网络请求 参数(uri,Method,PostData,Headers);
+*	 “DeleteCookie”				  - > 从域中删除所有 cookie;
+*	 “DeleteCookie”				  - > 从域中删除 cookie;
+*	 “Deletecookies”			  - > 从域中删除 cookie;
+*	 “Navigate”				  - > 导航到指定的URL;
+*	 “NavigateToString”			  - > 可以通过NavigateToString方法来加载一个字符串作为HTML内容;
+*	 “NavigateWithWebResourceRequest”	  - > 导航到指定 URI 的方法，它允许你在发送请求之前修改这个请求 这个方法可以用于注入 headers、cookies 或者其他自定义的 HTTP 请求数据。参数( “CoreWebView2WebResourceRequest” );
+*	 “PostWebMessageAsJson”			  - > 注入脚本后，在VFP利用"PostWebMessageAsJson"发送给WebView;				
+*	 “PostWebMessageAsString”		  - > 注入脚本后，在VFP利用"PostWebMessageAsJson"发送给WebView;	
+*	 “ProductVersion”			  - > WebView2包装器“WebView2Loader.dll”文件版本号;
+*	 “Reload”				  - > 重新加载当前显示的内容可以通过调用
  
 *-- V1.065
 *	Webview2 发布固定运行时刻包
@@ -160,15 +159,17 @@
 *	WebView2Loader.dll
 *	WebView2.tlb
 *	Win7	需要安装ndp462.exe\ 需要检测 WebView2 运行时刻 ->> 执行MicrosoftEdgeWebview2Setup.exe安装|或使用固定运行时刻
-*	Win10						需要检测 WebView2 运行时刻 ->> 执行MicrosoftEdgeWebview2Setup.exe安装|或使用固定运行时刻
+*	Win10			    需要检测 WebView2 运行时刻 ->> 执行MicrosoftEdgeWebview2Setup.exe安装|或使用固定运行时刻
 *	Win11 	直接使用无需任何安装。
 *   增加wsocket_client 调用实例.scx
 
 *-- V1.066
 *   对原DEMO表单文件重命名。
-*	增加事件“OnHistoryChanged” 	   触发时机：导航历史记录变化时（前进/后退/刷新），用途：更新 UI 中的前进/后退按钮状态 调用DEMO：基础属性与方法调用.scx
-*	增加事件“OnScriptDialogOpening”  触发时机：当 JavaScript 尝试弹出对话框（如 alert、confirm、prompt）时，此事件会被触发 调用DEMO：基础属性与方法调用.scx
+*   增加事件“OnHistoryChanged” 	    触发时机：导航历史记录变化时（前进/后退/刷新），用途：更新 UI 中的前进/后退按钮状态 调用DEMO：基础属性与方法调用.scx
+*   增加事件“OnScriptDialogOpening”  触发时机：当 JavaScript 尝试弹出对话框（如 alert、confirm、prompt）时，此事件会被触发 调用DEMO：基础属性与方法调用.scx
 *   增加事件“OnContextMenuRequested” 触发时机：右击鼠标时，用途：你可以控制这个菜单的显示、隐藏或者修改其内容 调用DEMO：基础属性与方法调用.scx
 *   增加事件“OnContextMenuClickAfter”触发时机：响应自定义菜单时，用途：判定响应菜单项作相应逻辑。 调用DEMO：基础属性与方法调用.scx
 *   调整类运行逻辑。
 *   WebView2Loader.dll 更新到(1.0.2957.106)
+*   “AddMenu”	  	  -> 添加自定义菜单      
+*   “RemoveMenu”	  -> 移除自定义/默认菜单  
