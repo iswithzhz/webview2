@@ -161,15 +161,15 @@
 *	Win7	需要安装ndp462.exe\ 需要检测 WebView2 运行时刻 ->> 执行MicrosoftEdgeWebview2Setup.exe安装|或使用固定运行时刻
 *	Win10			    需要检测 WebView2 运行时刻 ->> 执行MicrosoftEdgeWebview2Setup.exe安装|或使用固定运行时刻
 *	Win11 	直接使用无需任何安装。
-*   增加wsocket_client 调用实例.scx
+*   	增加wsocket_client 调用实例.scx
 
 *-- V1.066
-*   对原DEMO表单文件重命名。
-*   增加事件“OnHistoryChanged” 	    触发时机：导航历史记录变化时（前进/后退/刷新），用途：更新 UI 中的前进/后退按钮状态 调用DEMO：基础属性与方法调用.scx
-*   增加事件“OnScriptDialogOpening”  触发时机：当 JavaScript 尝试弹出对话框（如 alert、confirm、prompt）时，此事件会被触发 调用DEMO：基础属性与方法调用.scx
-*   增加事件“OnContextMenuRequested” 触发时机：右击鼠标时，用途：你可以控制这个菜单的显示、隐藏或者修改其内容 调用DEMO：基础属性与方法调用.scx
-*   增加事件“OnContextMenuClickAfter”触发时机：响应自定义菜单时，用途：判定响应菜单项作相应逻辑。 调用DEMO：基础属性与方法调用.scx
-*   调整类运行逻辑。
-*   WebView2Loader.dll 更新到(1.0.2957.106)
-*   “AddMenu”	  	  -> 添加自定义菜单      
-*   “RemoveMenu”	  -> 移除自定义/默认菜单  
+*   	对原DEMO表单文件重命名。
+*   	增加事件“OnHistoryChanged” 	    触发时机：导航历史记录变化时（前进/后退/刷新），用途：更新 UI 中的前进/后退按钮状态 调用DEMO：基础属性与方法调用.scx
+*   	增加事件“OnScriptDialogOpening”  触发时机：当 JavaScript 尝试弹出对话框（如 alert、confirm、prompt）时，此事件会被触发 调用DEMO：基础属性与方法调用.scx
+*   	增加事件“OnContextMenuRequested” 触发时机：右击鼠标时，用途：你可以控制这个菜单的显示、隐藏或者修改其内容 调用DEMO：基础属性与方法调用.scx
+*   	增加事件“OnContextMenuClickAfter”触发时机：响应自定义菜单时，用途：判定响应菜单项作相应逻辑。 调用DEMO：基础属性与方法调用.scx
+*   	调整类运行逻辑。
+*   	WebView2Loader.dll 更新到(1.0.2957.106)
+*   	“AddMenu”	  -> 添加自定义菜单      
+*   	“RemoveMenu”	  -> 移除自定义/默认菜单  
