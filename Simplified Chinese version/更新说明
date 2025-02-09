@@ -1,1 +1,174 @@
+*	一、WebView2是什么？
+*	Microsoft Edge WebView2 控件使你能够在本机应用程序中嵌入 web 技术 (HTML、CSS 和 JavaScript \ ) 。 
+*	WebView2 控件使用 Microsoft Edge () Chromium 作为呈现引擎在本机应用程序中显示 web 内容。 
+*	使用 WebView2，你可以将 web 代码嵌入本机应用程序的不同部分，或在单个 Web 视图中构建整个本机应用程序。
+*	这是Micosoft官方文档的说明，其实就是跟之前的WebBrowser一样，也是基于本地的浏览器内核引擎来渲染网页的，
+*	只不过这次使用的是Edge的Chromium内核
+*	WebView2支持H264的视频解码,意思你可用它看视频(包括YouKu)
+*	https://learn.microsoft.com/zh-cn/microsoft-edge/webview2/
 
+
+*	二、需要编程环境
+*	.NET Framework 4.62 | VFP9.0 7423
+
+*	三、VFP版的WebView2启动需要的文件包如下：
+*   \ClrHost.dll
+*	\WebView2Loader.dll    			
+*	\WebView2.tlb
+*	\WebView2.dl    						guid：{0c8340ef-b207-4c3f-9390-71eb8e7b5b95}
+*	\Microsoft.Web.WebView2.Core.dll
+*	\Microsoft.Web.WebView2.WinForms.dll
+
+*	四、如何开始？
+*	安装MicrosoftEdgeWebview2Setup.exe成功后，即可开始运行表单文件，;
+    若启动表单失败请运行dotnet-sdk-3.1.100-win-x86.exe或;dotnet-sdk-3.1.100-win-x64.exe;
+    或从该网站下载运行环境：https://developer.microsoft.com/zh-tw/microsoft-edge/webview2?form=MO12GI
+
+*	五、适应系统
+*	VFP版 WebView2 运行时版本 109 是支持以下 Windows 版本的最终版本。 
+* Windows 7
+*	Windows 8/8.1
+*	Windows 7
+*	Windows Server 2012 R2
+*	Windows Server 2012
+*	Windows Server 2008 R2
+*	Windows 11
+*	Windows 10
+*	Windows 10 IoT 企业版 LTSC x32 2019
+*	Windows 10 IoT 企业版 LTSC x64 2019
+*	Windows 10 IoT 企业版 21h1 x64
+*	Windows Server 2022
+*	Windows Server 2019
+*	Windows Server 2016
+
+*	六、如何商用注册
+*	联系方式wx：z68256904,QQ:68256904,Email:Iswith@126.com
+
+
+*-- 更新概要
+*-- V1.0.1 200230225
+*	This.oWebview2       = Createobject( "WebView2.FoxWebView") 	 &&WebView2的WinForm窗体
+*	This.oWebview2vfp 	  = This.oWebview2.WebView2Init()			 &&WebView2控件
+*	This.oWebview2.WebView2.CoreWebView2 如果成功初始化 这将是WebView2的实体，一切方法都在这个对象之下与C#实体一致，它是原生的，
+*	及c#实体对象下的隶属方法继承（意思它原有什么方法函数，你在VFP访问该函数执行：This.oWebview2.WebView2.CoreWebView2.Function1()
+*	作者包装的任何方法函数在：This.oWebview2这个对象之下 This.oWebview2.Function1,.Function2,.Function3.....
+*	在你应用框架启动最开始时，自行添加这句把临时文件删除掉
+*	Erase (  Addbs( Getenv("TEMP") ) + '*.fxp'  )
+
+*-- V.1.0.2 200230227
+*	WebView2 主要更新
+*	系统增加一个BuildEvents方法，该方法主要产生一个“oWebView2_Events”事件类，且产生该类方法不能更改。
+*	访问该事件类“oWebView2_Events”{ this.oWebview2_events }
+*	若需要由该类派生一个新类，而你又不需要当前类的事件名称您可以访问该 “oWebView2_Events”事件类,对其事件进行绑定
+*	比如：可采用例如下述语法，若事件类“CoreWebView2Events_OnInitCompleted”存在，且当前类对象有“OnInitCompleted”方法，将绑定在一起。
+*	在事件方法中需要注意VFP因是单线程设计，若您在事件方法中执行了一个长耗时动作，将由_vfp.AutoYield=.T.|.F.来约定COM+事件通知是否排队。
+*	_vfp.AutoYield=.F. 在VFP事件方法执行长耗时，将对COM+事件方法有阻塞影响或异常影响，也就意味着您不能很随意在事件中进用Set Step On 来调试。
+
+*--绑定“oWebView2_Events”事件类
+*	If Pemstatus( this.oWebview2_events , 'CoreWebView2Events_OnInitCompleted' , 5 )  And ;
+*	   Pemstatus( this				    , 'OnInitCompleted'					   , 5 )  Then  
+
+*	   Bindevent( this.oWebview2_events , 'CoreWebView2Events_OnInitCompleted' 			, This , 'OnInitCompleted' )
+*	Endif 
+*	关于COM+的任何异常,在This.oWebView2.GetlogPath(),来获取得到异常日志路径，SetlogPath() 设置异常路径日志（每次都需要的话） 废除
+
+*-- V.1.0.3 200230309
+*	增加一个函数方法：“oWebview2.CheckWebView2Exist()”主要用来检测客户是否有安装“WebView2”的运行时刻。
+*	增加一个模块	 ：webview_echarts简单交互版.scx 与 echarts_demo.prg 这个表单主要功能为Echarts交互功能，细节请查看这个表单的about及相关方法注释
+													*echarts_demo.prg中echarts_demo1对应表单：“webview_echarts简单交互版”第一个按钮，它的js调用为oEcharts方式。
+
+*	增加一个模块：webview_echarts自动刷新.scx   用于SQL自动后台刷新
+*	去掉log日志,您可以删除WebView2Log目录
+*	在您软件的初化应用中您可能需要将“This.Events_path”目录下所有的fxp删除,它是用来临时绑定事件的
+
+*-- V.1.0.4 
+*	特别要注意在被引用Webview2的表单上，VFP任何控件的MouseDown()，传参被固定为:Button, nShift, nXCoord, nYCoord
+*	如需更多请更改本类“wm_onclick”方法（因为二者绑在在一起的）
+*	增加 一个事件：“OnBasicAuthenticationRequested”
+*	修正 WebView放进多级容器时位置会错乱，祥细请查看事件“ReSize”说明
+*	原生方法：oWebview2vfp.ProductVersion 												访问：WebView2Loader版本号
+*	原生方法：oWebview2vfp.CoreWebView2.PostWebMessageAsJson	( string As json   )	
+*	原生方法：oWebview2vfp.CoreWebView2.PostWebMessageAsString ( string As string )
+*	原生方法：oWebview2vfp.CoreWebView2.Reload()							
+*	原生方法：oWebview2vfp.CoreWebView2.StatusBarText()
+
+*-- V.1.0.4 Build 20230320
+*	增加顶层表单的子类窗体
+*	同时废弃WM_OnACTIVATE事件绑定，同时解决了顶层窗体切换时WebView2有闪烁情况。
+*	同时在webview_代码编辑器.scx时权释出最新的交互调代码,让交互代码调用变得更让人容易理解。
+
+*-- V.1.0.5 Build 20230320
+*	解决：1.05版之前的版本可能EXE环境都会有一个问题不能把WebView2重复使用！
+*	增加一个“netfunction”方法集成，这个方法集中会慢慢加入一些常用函数库(某些功能涉及收费有注明）细节请查看类“netfunction”
+*	增加两个方法事件“OnSourceChanged”，“OnDocumentTitleChanged”，因为在某些特殊的页面导航时无法得知文档的标题与Url
+*	增加缓存目录设置，假如您的EXE在C盘，而WebView默认是没有C盘读取/写入权限，您可以设置这个非C盘目录解决问题，
+*	如果用户没有其它盘符您需要手动解决权限问题或使用管理员权限运行注册WebView2.DLL
+*	废弃目录下的config.ini文件，您可以将其删除
+*	WebView2Loader.dll 更新到(1.0.1661.34)
+
+*-- V.1.0.6 Build 20230328
+*	制做了非商用的免费版Webview2.Dll,若为了平时工作需要不脱离 VFP9 SP2 7423 可以永远免费使用，
+*	若其商用请联系作者进行注册
+*	去掉了非Webview2其它附加的其它功能
+
+*-- V1.062  Build20240719
+*	WebView2Loader.dll |Microsoft.Web.WebView2.Core.dll | Microsoft.Web.WebView2.WinForms.dll 更新到(1.0.2592.51)
+*	将"CoreWebView2"原属于内部方法包装成该类方法与属性方便调用
+*	增加一个响应页面键盘消息Js脚本
+*	20240721 完成Dll免注册 
+*	方法重命名：“ExecuteScript” 							- > “ExecuteScriptAsync”    					-> 事件“OnExecuteScript”;
+				 “GetCookies”    							- > “GetCookiesAsync”   	  					-> 事件“OnGetCookies”   ;
+				 “AddscriptToExecuteOnDocumentCreated” 	- > “AddscriptToExecuteOnDocumentCreatedAsync”-> 事件“OnAddscriptToExecuteOnDocumentCreated”
+			 
+*函数说明   
+*	 “PrintToPdfAsync” 						- > Html2Pdf ->  完成触发“OnPrintCompleted”事件;
+*	 “CallDevToolsProtocolMethodAsync”		- > 允许你异步调用 WebView 的开发者工具协议（DevTools Protocol）上的方法。这个方法允许你从你的应用程序中直接与 WebView 的浏览器引擎通信 完成触发“OnCallDevToolsProtocolMethod” 事件;
+*	 “Base64ToBytes”							- > 将Base64二进制数据字符串 转二进数据字节 = Createbinary( Strconv( Base64Str , 13 ) );
+*	 “AddWebResourceRequestedFilter”          - > 添加自定义过滤器拦截;
+*	 “RemoveWebResourceRequestedFilter”		- > 移除自定义过滤器拦截;
+*	 “ClearBrowsingData”						- > 清除浏览数据;
+*	 “AddHostObjectToScript”					- > 将一个_VFP 对象添加到 JavaScript 环境中;
+*	 “RemoveHostObjectFromScript”				- > 从 WebView2 的脚本环境中移除一个宿主对象;
+*	 “ExecuteScript”							- > 执行Js脚本,由“OnExecuteScript”事件响应;
+*	 “AddorUpdateCookie”						- > 添加或更新Cookie;
+*	 “CreateCookie”							- > 创建一个新的Cookie; 派生类“CoreWebView2Cookie” 参数( 名称,值,域,路径);
+*	 “CreateStream”							- > 创建一个内存流，派生类“MemoryStream”;
+*	 “CreateStreamReader”						- > 创建一个内存流类，派生类“StreamReader”;
+*	 “CreateWebResourceRequest”			    - > 创建一个派生类“CoreWebView2WebResourceRequest”对象，设置其属性，并使用它来发起网络请求 参数(uri,Method,PostData,Headers);
+*	 “DeleteCookie”							- > 从域中删除所有 cookie;
+*	 “DeleteCookie”							- > 从域中删除 cookie;
+*	 “Deletecookies”						    - > 从域中删除 cookie;
+*	 “Navigate”								- > 导航到指定的URL;
+*	 “NavigateToString”						- > 可以通过NavigateToString方法来加载一个字符串作为HTML内容;
+*	 “NavigateWithWebResourceRequest”			- > 导航到指定 URI 的方法，它允许你在发送请求之前修改这个请求 这个方法可以用于注入 headers、cookies 或者其他自定义的 HTTP 请求数据。参数( “CoreWebView2WebResourceRequest” );
+*	 “PostWebMessageAsJson”					- > 注入脚本后，在VFP利用"PostWebMessageAsJson"发送给WebView;				
+*	 “PostWebMessageAsString”					- > 注入脚本后，在VFP利用"PostWebMessageAsJson"发送给WebView;	
+*	 “ProductVersion”							- > WebView2包装器“WebView2Loader.dll”文件版本号;
+*	 “Reload”									- > 重新加载当前显示的内容可以通过调用
+ 
+*-- V1.065
+*	Webview2 发布固定运行时刻包
+*	方便升级部署。。。。
+*	webview2 1.065 增加 设置缓存路径以及固定运行时刻运行,调用DEMO：基础浏览版.scx
+*	固定运行时刻下载:
+*	https://down.bccn.net/12711.html  >=Win10
+*	https://down.bccn.net/12712.html  =Win7
+*	修正该事件"OnInitCompleted"在未初始化成功控件时不触发事件->现在初始化控件不成功将在这个事件中得到标识IsSuccess=.F.
+*	发布时的DLL将被合成在一起总体改变三个DLL发行分别为：
+*	ClrHost.dll
+*	WebView2.dll
+*	WebView2Loader.dll
+*	WebView2.tlb
+*	Win7	需要安装ndp462.exe\ 需要检测 WebView2 运行时刻 ->> 执行MicrosoftEdgeWebview2Setup.exe安装|或使用固定运行时刻
+*	Win10						需要检测 WebView2 运行时刻 ->> 执行MicrosoftEdgeWebview2Setup.exe安装|或使用固定运行时刻
+*	Win11 	直接使用无需任何安装。
+*   增加wsocket_client 调用实例.scx
+
+*-- V1.066
+*   对原DEMO表单文件重命名。
+*	增加事件“OnHistoryChanged” 	   触发时机：导航历史记录变化时（前进/后退/刷新），用途：更新 UI 中的前进/后退按钮状态 调用DEMO：基础属性与方法调用.scx
+*	增加事件“OnScriptDialogOpening”  触发时机：当 JavaScript 尝试弹出对话框（如 alert、confirm、prompt）时，此事件会被触发 调用DEMO：基础属性与方法调用.scx
+*   增加事件“OnContextMenuRequested” 触发时机：右击鼠标时，用途：你可以控制这个菜单的显示、隐藏或者修改其内容 调用DEMO：基础属性与方法调用.scx
+*   增加事件“OnContextMenuClickAfter”触发时机：响应自定义菜单时，用途：判定响应菜单项作相应逻辑。 调用DEMO：基础属性与方法调用.scx
+*   调整类运行逻辑。
+*   WebView2Loader.dll 更新到(1.0.2957.106)
