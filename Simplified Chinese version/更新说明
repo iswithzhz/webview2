@@ -1,4 +1,4 @@
-*	一、WebView2是什么？
+*一、WebView2是什么？
 *	Microsoft Edge WebView2 控件使你能够在本机应用程序中嵌入 web 技术 (HTML、CSS 和 JavaScript \ ) 。 
 *	WebView2 控件使用 Microsoft Edge () Chromium 作为呈现引擎在本机应用程序中显示 web 内容。 
 *	使用 WebView2，你可以将 web 代码嵌入本机应用程序的不同部分，或在单个 Web 视图中构建整个本机应用程序。
@@ -8,25 +8,25 @@
 *	https://learn.microsoft.com/zh-cn/microsoft-edge/webview2/
 
 
-*	二、需要编程环境
+*二、需要编程环境
 *	.NET Framework 4.62 | VFP9.0 7423
 
-*	三、VFP版的WebView2启动需要的文件包如下：
-*   \ClrHost.dll
+*三、VFP版的WebView2启动需要的文件包如下：
+*       \ClrHost.dll
 *	\WebView2Loader.dll    			
 *	\WebView2.tlb
 *	\WebView2.dl    						guid：{0c8340ef-b207-4c3f-9390-71eb8e7b5b95}
 *	\Microsoft.Web.WebView2.Core.dll
 *	\Microsoft.Web.WebView2.WinForms.dll
 
-*	四、如何开始？
+*四、如何开始？
 *	安装MicrosoftEdgeWebview2Setup.exe成功后，即可开始运行表单文件，;
-    若启动表单失败请运行dotnet-sdk-3.1.100-win-x86.exe或;dotnet-sdk-3.1.100-win-x64.exe;
-    或从该网站下载运行环境：https://developer.microsoft.com/zh-tw/microsoft-edge/webview2?form=MO12GI
+    	若启动表单失败请运行dotnet-sdk-3.1.100-win-x86.exe或;dotnet-sdk-3.1.100-win-x64.exe;
+    	或从该网站下载运行环境：https://developer.microsoft.com/zh-tw/microsoft-edge/webview2?form=MO12GI
 
-*	五、适应系统
+*五、适应系统
 *	VFP版 WebView2 运行时版本 109 是支持以下 Windows 版本的最终版本。 
-* Windows 7
+* 	Windows 7
 *	Windows 8/8.1
 *	Windows 7
 *	Windows Server 2012 R2
@@ -41,7 +41,7 @@
 *	Windows Server 2019
 *	Windows Server 2016
 
-*	六、如何商用注册
+*六、如何商用注册
 *	联系方式wx：z68256904,QQ:68256904,Email:Iswith@126.com
 
 
