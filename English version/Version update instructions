@@ -1,1 +1,182 @@
 
+I. What is WebView2?
+   The Microsoft Edge WebView2 control allows you to embed web technologies (HTML, CSS, and JavaScript) into native applications.
+	The WebView2 control uses the Microsoft Edge (Chromium) rendering engine to display web content within native applications.
+	With WebView2, you can embed web code into different parts of a native application or build an entire native application within a single WebView.
+	This is Microsoft’s official description. Essentially, it functions similarly to the legacy WebBrowser control but uses Edge’s Chromium kernel.
+	WebView2 supports H.264 video decoding, enabling video playback (including platforms like YouKu).
+	https://learn.microsoft.com/zh-cn/microsoft-edge/webview2/
+
+II. Required Development Environment
+
+	.NET Framework 4.62 | VFP9.0 7423
+
+III. Required Files for VFP WebView2 Startup
+
+	\ClrHost.dll
+	\WebView2.dll
+	\WebView2Loader.dll
+	\WebView2.tlb
+
+IV. Supported Systems
+
+	The VFP WebView2 runtime (version 109) is the final version supporting the following Windows OS:
+	Windows 7
+	Windows 8/8.1
+	Windows Server 2012 R2
+	Windows Server 2012
+	Windows Server 2008 R2
+	Windows 11
+	Windows 10
+	Windows 10 IoT Enterprise LTSC x32 2019
+	Windows 10 IoT Enterprise LTSC x64 2019
+	Windows 10 IoT Enterprise 21H1 x64
+	Windows Server 2022
+	Windows Server 2019
+	Windows Server 2016
+
+V. Commercial Licensing
+	Contact:
+	WeChat: z68256904
+	QQ: 68256904
+	Email: Iswith@126.com
+
+
+# WebView2 Control Update Documentation 
+
+## Version 1.062 Build 20240719
+* Updated DLLs:
+  - `WebView2Loader.dll`
+  - `Microsoft.Web.WebView2.Core.dll`
+  - `Microsoft.Web.WebView2.WinForms.dll` to v1.0.2592.51
+* Wrapped internal `CoreWebView2` methods into class methods/properties for easier access
+* Added JS script response for page keyboard messages
+* Completed DLL registration-free implementation (20240721)
+
+---
+
+### Method Renaming
+| Original Method                          | Renamed Method                                  | Event Triggered                 |
+|------------------------------------------|-------------------------------------------------|---------------------------------|
+| `ExecuteScript`                          | → `ExecuteScriptAsync`                         | → `OnExecuteScript`            |
+| `GetCookies`                             | → `GetCookiesAsync`                            | → `OnGetCookies`               |
+| `AddscriptToExecuteOnDocumentCreated`    | → `AddscriptToExecuteOnDocumentCreatedAsync`   | → `OnAddscriptToExecuteOnDocumentCreated` |
+
+---
+
+### Function Specifications
+#### Core Methods
+- **`PrintToPdfAsync`**  
+  Converts HTML to PDF. Triggers `OnPrintCompleted` event upon completion.
+
+- **`CallDevToolsProtocolMethodAsync`**  
+  Asynchronously calls DevTools Protocol methods. Triggers `OnCallDevToolsProtocolMethod` event.
+
+- **`Base64ToBytes`**  
+  Converts Base64 string to binary bytes:  
+  `Createbinary(Strconv(Base64Str, 13))`
+
+- **`AddWebResourceRequestedFilter`**  
+  Adds custom filters for resource interception.
+
+- **`RemoveWebResourceRequestedFilter`**  
+  Removes custom resource filters.
+
+- **`ClearBrowsingData`**  
+  Clears browsing data.
+
+- **`AddHostObjectToScript`**  
+  Injects a VFP object into the JavaScript environment.
+
+- **`RemoveHostObjectFromScript`**  
+  Removes a host object from the script environment.
+
+- **`ExecuteScript`**  
+  Executes JS scripts. Responds via `OnExecuteScript` event.
+
+- **`AddorUpdateCookie`**  
+  Adds/updates cookies.
+
+- **`CreateCookie`**  
+  Creates a `CoreWebView2Cookie` object. Parameters: `(Name, Value, Domain, Path)`.
+
+- **`CreateStream`**  
+  Creates a `MemoryStream` object.
+
+- **`CreateStreamReader`**  
+  Creates a `StreamReader` object.
+
+- **`CreateWebResourceRequest`**  
+  Creates a `CoreWebView2WebResourceRequest` for custom network requests. Parameters: `(URI, Method, PostData, Headers)`.
+
+- **`DeleteCookie`**  
+  Deletes all cookies from a domain.
+
+- **`DeleteCookies`**  
+  Deletes specific cookies from a domain.
+
+- **`Navigate`**  
+  Navigates to a specified URL.
+
+- **`NavigateToString`**  
+  Loads HTML content from a string.
+
+- **`NavigateWithWebResourceRequest`**  
+  Navigates using a pre-configured `CoreWebView2WebResourceRequest` object.
+
+- **`PostWebMessageAsJson`**  
+  Sends JSON messages to WebView from VFP.
+
+- **`PostWebMessageAsString`**  
+  Sends string messages to WebView from VFP.
+
+- **`ProductVersion`**  
+  Returns the version of `WebView2Loader.dll`.
+
+- **`Reload`**  
+  Reloads the current content.
+
+---
+
+## Version 1.065
+* Deployed fixed runtime packages for WebView2.
+* New Features:
+  - Added cache path configuration.
+  - Fixed runtime execution (Demo: `Base Browser.scx`).
+  - Runtime Download Links:
+    - Windows 10+: [https://down.bccn.net/12711.html](https://down.bccn.net/12711.html)
+    - Windows 7:   [https://down.bccn.net/12712.html](https://down.bccn.net/12712.html)
+* Critical Fixes:
+  - `OnInitCompleted` event now returns `IsSuccess=.F.` if initialization fails.
+* Deployment DLLs:
+  - `ClrHost.dll`
+  - `WebView2.dll`
+  - `WebView2Loader.dll`
+  - `WebView2.tlb`
+* System Requirements:
+  - Win7: Requires .NET 4.6.2 (`ndp462.exe`) + WebView2 runtime (`MicrosoftEdgeWebview2Setup.exe`).
+  - Win10: WebView2 runtime required.
+  - Win11: Native support.
+* Added `wsocket_client` example: `wsocket_client.scx`.
+
+---
+
+## Version 1.066
+* Renamed demo forms.
+* New Events:
+  - **`OnHistoryChanged`**  
+    Trigger: Navigation history changes (e.g., forward/back/refresh). Use: Update UI button states (Demo: `Basic Properties and Methods.scx`).
+  
+  - **`OnScriptDialogOpening`**  
+    Trigger: JavaScript dialog attempts (alert/confirm/prompt). Use: Custom dialog handling (Demo: `Basic Properties and Methods.scx`).
+  
+  - **`OnContextMenuRequested`**  
+    Trigger: Right-click context menu request. Use: Control menu visibility/content (Demo: `Basic Properties and Methods.scx`).
+  
+  - **`OnContextMenuClickAfter`**  
+    Trigger: After custom menu interaction. Use: Handle menu item logic (Demo: `Basic Properties and Methods.scx`).
+* Class logic optimizations.
+* Updated `WebView2Loader.dll` to v1.0.2957.106.
+* Menu Methods:
+  - **`AddMenu`**: Adds custom context menu items.
+  - **`RemoveMenu`**: Removes custom/default menu items.
