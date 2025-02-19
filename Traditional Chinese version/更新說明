@@ -1,1 +1,319 @@
+一、WebView2是什麼？
 
+Microsoft Edge WebView2 控制項使你能夠在本機應用程式中嵌入網頁技術 (HTML、CSS 和 JavaScript \ )。
+
+WebView2 控制項使用 Microsoft Edge (Chromium) 作為呈現引擎在本機應用程式中顯示網頁內容。
+
+使用 WebView2，你可以將網頁程式碼嵌入本機應用程式的不同部分，或在單個 Web 視圖中建構整個本機應用程式。
+
+這是 Microsoft 官方文件的說明，其實跟之前的 WebBrowser 一樣，也是基於本地的瀏覽器核心引擎來渲染網頁的，
+
+只不過這次使用的是 Edge 的 Chromium 核心
+
+WebView2 支援 H264 的視訊解碼，意思你可用它看影片（包括 YouKu）
+
+https://learn.microsoft.com/zh-cn/microsoft-edge/webview2/
+
+二、需要程式設計環境
+
+.NET Framework 4.62 | VFP9.0 7423
+
+三、VFP 版的 WebView2 啟動需要的檔案包如下：
+
+\ClrHost.dll
+
+\WebView2Loader.dll
+
+\WebView2.tlb
+
+\WebView2.dll guid：{0c8340ef-b207-4c3f-9390-71eb8e7b5b95}
+
+\Microsoft.Web.WebView2.Core.dll
+
+\Microsoft.Web.WebView2.WinForms.dll
+
+四、如何開始？
+
+安裝 MicrosoftEdgeWebview2Setup.exe 成功後，即可開始執行表單檔案；
+若啟動表單失敗，請執行 dotnet-sdk-3.1.100-win-x86.exe 或 dotnet-sdk-3.1.100-win-x64.exe；
+或從該網站下載執行環境：https://developer.microsoft.com/zh-tw/microsoft-edge/webview2?form=MO12GI
+
+五、適應系統
+
+VFP 版 WebView2 執行時版本 109 是支援以下 Windows 版本的最終版本。
+
+Windows 7
+
+Windows 8/8.1
+
+Windows 7
+
+Windows Server 2012 R2
+
+Windows Server 2012
+
+Windows Server 2008 R2
+
+Windows 11
+
+Windows 10
+
+Windows 10 IoT 企業版 LTSC x32 2019
+
+Windows 10 IoT 企業版 LTSC x64 2019
+
+Windows 10 IoT 企業版 21h1 x64
+
+Windows Server 2022
+
+Windows Server 2019
+
+Windows Server 2016
+
+六、如何商用註冊
+
+聯絡方式 wx：z68256904, QQ:68256904, Email: Iswith@126.com
+
+*-- 更新概要
+*-- V1.0.1 200230225
+
+This.oWebview2 = Createobject( "WebView2.FoxWebView") &&WebView2 的 WinForm 窗體
+
+This.oWebview2vfp = This.oWebview2.WebView2Init() &&WebView2 控制項
+
+This.oWebview2.WebView2.CoreWebView2 如果成功初始化，這將是 WebView2 的實體，一切方法都在這個物件之下與 C# 實體一致，它是原生的，
+
+及 C# 實體物件下的隸屬方法繼承（意思它原有什麼方法函數，你在 VFP 存取該函數執行：This.oWebview2.WebView2.CoreWebView2.Function1()
+
+作者包裝的任何方法函數在：This.oWebview2 這個物件之下 This.oWebview2.Function1,.Function2,.Function3.....
+
+在你應用框架啟動最開始時，自行新增這句把暫存檔刪除掉
+
+Erase ( Addbs( Getenv("TEMP") ) + '*.fxp' )
+
+*-- V.1.0.2 200230227
+
+WebView2 主要更新
+
+系統新增一個 BuildEvents 方法，該方法主要產生一個「oWebView2_Events」事件類別，且產生該類別方法不能更改。
+
+存取該事件類別「oWebView2_Events」{ this.oWebview2_events }
+
+若需要由該類別派生一個新類別，而你又不需要當前類別的事件名稱，您可以存取該「oWebView2_Events」事件類別，對其事件進行綁定
+
+比如：可採用例如下述語法，若事件類別「CoreWebView2Events_OnInitCompleted」存在，且當前類別物件有「OnInitCompleted」方法，將綁定在一起。
+
+在事件方法中需要注意 VFP 因是單執行緒設計，若您在事件方法中執行了一個長耗時動作，將由 _vfp.AutoYield=.T.|.F. 來約定 COM+ 事件通知是否排隊。
+
+_vfp.AutoYield=.F. 在 VFP 事件方法執行長耗時，將對 COM+ 事件方法有阻塞影響或異常影響，也就意味著您不能很隨意在事件中進用 Set Step On 來除錯。
+
+*-- 綁定「oWebView2_Events」事件類別
+
+If Pemstatus( this.oWebview2_events , 'CoreWebView2Events_OnInitCompleted' , 5 ) And ;
+
+复制
+ Pemstatus( this				    , 'OnInitCompleted'					   , 5 )  Then    
+复制
+ Bindevent( this.oWebview2_events , 'CoreWebView2Events_OnInitCompleted' 			, This , 'OnInitCompleted' )  
+Endif
+
+關於 COM+ 的任何異常，在 This.oWebView2.GetlogPath()，來取得異常日誌路徑，SetlogPath() 設定異常路徑日誌（每次都需要的話） 廢除
+
+*-- V.1.0.3 200230309
+
+新增一個函數方法：「oWebview2.CheckWebView2Exist()」主要用來檢測客戶是否有安裝「WebView2」的執行時刻。
+
+新增一個模組 ：webview_echarts 簡單互動版.scx 與 echarts_demo.prg 這個表單主要功能為 Echarts 互動功能，細節請檢視這個表單的 about 及相關方法註解
+*echarts_demo.prg 中 echarts_demo1 對應表單：「webview_echarts 簡單互動版」第一個按鈕，它的 js 呼叫為 oEcharts 方式。
+
+新增一個模組：webview_echarts 自動重新整理.scx 用於 SQL 自動後台重新整理
+
+去掉 log 日誌，您可以刪除 WebView2Log 目錄
+
+在您軟體的初化應用中，您可能需要將「This.Events_path」目錄下所有的 fxp 刪除，它是用來臨時綁定事件的
+
+*-- V.1.0.4
+
+特別要注意在被引用 Webview2 的表單上，VFP 任何控制項的 MouseDown()，傳參被固定為：Button, nShift, nXCoord, nYCoord
+
+如需更多請更改本類別「wm_onclick」方法（因為二者綁定在一起的）
+
+新增一個事件：「OnBasicAuthenticationRequested」
+
+修正 WebView 放進多級容器時位置會錯亂，詳情請檢視事件「ReSize」說明
+
+原生方法：oWebview2vfp.ProductVersion 存取：WebView2Loader 版本號
+
+原生方法：oWebview2vfp.CoreWebView2.PostWebMessageAsJson ( string As json )
+
+原生方法：oWebview2vfp.CoreWebView2.PostWebMessageAsString ( string As string )
+
+原生方法：oWebview2vfp.CoreWebView2.Reload()
+
+原生方法：oWebview2vfp.CoreWebView2.StatusBarText()
+
+*-- V.1.0.4 Build 20230320
+
+新增頂層表單的子類別窗體
+
+同時廢棄 WM_OnACTIVATE 事件綁定，同時解決了頂層窗體切換時 WebView2 有閃爍情況。
+
+同時在 webview_程式碼編輯器.scx 時權釋出最新的互動調用程式碼，讓互動程式碼呼叫變得更讓人容易理解。
+
+*-- V.1.0.5 Build 20230320
+
+解決：1.05 版之前的版本可能 EXE 環境都會有一個問題不能把 WebView2 重複使用！
+
+新增一個「netfunction」方法整合，這個方法集中會慢慢加入一些常用函式庫（某些功能涉及收費有註明）細節請檢視類別「netfunction」
+
+新增兩個方法事件「OnSourceChanged」、「OnDocumentTitleChanged」，因為在某些特殊的頁面導航時無法得知文件的標題與 Url
+
+新增快取目錄設定，假如您的 EXE 在 C 槽，而 WebView 預設是沒有 C 槽讀取/寫入權限，您可以設定這個非 C 槽目錄解決問題，
+
+如果使用者沒有其它磁碟機代號您需要手動解決權限問題或使用管理員權限執行註冊 WebView2.DLL
+
+廢棄目錄下的 config.ini 檔案，您可以將其刪除
+
+WebView2Loader.dll 更新到 (1.0.1661.34)
+
+*-- V.1.0.6 Build 20230328
+
+製作了非商用的免費版 Webview2.Dll，若為了平時工作需要不脫離 VFP9 SP2 7423 可以永遠免費使用，
+
+若其商用請聯絡作者進行註冊
+
+去掉了非 Webview2 其它附加的其它功能
+
+*-- V1.062 Build20240719
+
+WebView2Loader.dll |Microsoft.Web.WebView2.Core.dll | Microsoft.Web.WebView2.WinForms.dll 更新到 (1.0.2592.51)
+
+將 "CoreWebView2" 原屬於內部方法包裝成該類別方法與屬性方便呼叫
+
+新增一個響應頁面鍵盤訊息 Js 腳本
+
+20240721 完成 Dll 免註冊
+
+方法重新命名：「ExecuteScript」 -> 「ExecuteScriptAsync」 -> 事件「OnExecuteScript」;
+「GetCookies」 -> 「GetCookiesAsync」 -> 事件「OnGetCookies」 ;
+「AddscriptToExecuteOnDocumentCreated」 -> 「AddscriptToExecuteOnDocumentCreatedAsync」-> 事件「OnAddscriptToExecuteOnDocumentCreated」
+
+*函數說明
+
+「PrintToPdfAsync」 -> Html2Pdf -> 完成觸發「OnPrintCompleted」事件
+
+「CallDevToolsProtocolMethodAsync」 -> 允許你非同步呼叫 WebView 的開發者工具協議（DevTools Protocol）上的方法。這個方法允許你從你的應用程式中直接與 WebView 的瀏覽器引擎通訊 完成觸發「OnCallDevToolsProtocolMethod」 事件
+
+「Base64ToBytes」 -> 將 Base64 二進位資料字串 轉二進資料位元組 = Createbinary( Strconv( Base64Str , 13 ) )
+
+「AddWebResourceRequestedFilter」 -> 新增自訂過濾器攔截
+
+「RemoveWebResourceRequestedFilter」 -> 移除自訂過濾器攔截
+
+「ClearBrowsingData」 -> 清除瀏覽資料
+
+「AddHostObjectToScript」 -> 將一個 _VFP 物件新增到 JavaScript 環境中
+
+「RemoveHostObjectFromScript」 -> 從 WebView2 的腳本環境中移除一個宿主物件
+
+「ExecuteScript」 -> 執行 Js 腳本，由「OnExecuteScript」事件響應
+
+「AddorUpdateCookie」 -> 新增或更新 Cookie
+
+「CreateCookie」 -> 建立一個新的 Cookie; 派生類別「CoreWebView2Cookie」 參數（名稱,值,域,路徑）
+
+「CreateStream」 -> 建立一個記憶體流，派生類別「MemoryStream」
+
+「CreateStreamReader」 -> 建立一個記憶體流類別，派生類別「StreamReader」
+
+「CreateWebResourceRequest」 -> 建立一個派生類別「CoreWebView2WebResourceRequest」物件，設定其屬性，並使用它來發起網路請求 參數 (uri,Method,PostData,Headers)
+
+「DeleteCookie」 -> 從域中刪除所有 cookie
+
+「DeleteCookie」 -> 從域中刪除 cookie
+
+「Deletecookies」 -> 從域中刪除 cookie
+
+「Navigate」 -> 導航到指定的 URL
+
+「NavigateToString」 -> 可以透過 NavigateToString 方法來載入一個字串作為 HTML 內容
+
+「NavigateWithWebResourceRequest」 -> 導航到指定 URI 的方法，它允許你在傳送請求之前修改這個請求 這個方法可以用於注入 headers、cookies 或者其他自訂的 HTTP 請求資料。參數（「CoreWebView2WebResourceRequest」）
+
+「PostWebMessageAsJson」 -> 注入腳本後，在 VFP 利用 "PostWebMessageAsJson" 傳送給 WebView
+
+「PostWebMessageAsString」 -> 注入腳本後，在 VFP 利用 "PostWebMessageAsJson" 傳送給 WebView
+
+「ProductVersion」 -> WebView2 包裝器「WebView2Loader.dll」檔案版本號
+
+「Reload」 -> 重新載入目前顯示的內容可以透過呼叫
+
+*-- V1.065
+
+Webview2 發佈固定執行時刻包
+
+方便升級部署。。。。
+
+webview2 1.065 新增 設定快取路徑以及固定執行時刻執行，呼叫 DEMO：基礎瀏覽版.scx
+
+固定執行時刻下載:
+
+https://down.bccn.net/12711.html >=Win10
+
+https://down.bccn.net/12712.html =Win7
+
+修正該事件 "OnInitCompleted" 在未初始化成功控制項時不觸發事件 -> 現在初始化控制項不成功將在這個事件中得到標識 IsSuccess=.F.
+
+發佈時的 DLL 將被合成在一起總體改變三個 DLL 發行分別為：
+
+ClrHost.dll
+
+WebView2.dll
+
+WebView2Loader.dll
+
+WebView2.tlb
+
+Win7 需要安裝 ndp462.exe\ 需要檢測 WebView2 的執行時刻 ->> 執行 MicrosoftEdgeWebview2Setup.exe 安裝 | 或使用固定執行時刻
+
+Win10 需要檢測 WebView2 的執行時刻 ->> 執行 MicrosoftEdgeWebview2Setup.exe 安裝 | 或使用固定執行時刻
+
+Win11 直接使用無需任何安裝。
+
+新增 wsocket_client 呼叫實例.scx
+
+*-- V1.066
+
+對原 DEMO 表單檔案重新命名。
+
+所有傳參變數規範輸寫前面加了 t+變數類型 As 變數類型，之前老的參數變數不影響，喜歡這種方式的同步改，不喜歡改的可以不改。
+
+新增事件「OnHistoryChanged」 觸發時機：導航歷史記錄變化時（前進/後退/重新整理），用途：更新 UI 中的前進/後退按鈕狀態 呼叫 DEMO：基礎屬性與方法呼叫.scx
+
+新增事件「OnScriptDialogOpening」 觸發時機：當 JavaScript 嘗試彈出對話框（如 alert、confirm、prompt）時，此事件會被觸發 呼叫 DEMO：基礎屬性與方法呼叫.scx
+
+新增事件「OnContextMenuRequested」 觸發時機：右擊滑鼠時，用途：你可以控制這個選單的顯示、隱藏或者修改其內容 呼叫 DEMO：基礎屬性與方法呼叫.scx
+
+新增事件「OnContextMenuClickAfter」觸發時機：響應自訂選單時，用途：判定響應選單項作相應邏輯。 呼叫 DEMO：基礎屬性與方法呼叫.scx
+
+DEMO：基礎屬性與方法呼叫.scx 新增了動態管理邏輯停止與重新整理
+
+調整類別執行邏輯。
+
+WebView2Loader.dll 更新到 (1.0.3065.39)
+
+「AddMenu」 -> 新增自訂選單項
+
+「RemoveMenu」 -> 移除自訂/預設選單項
+
+「GetMenu」 -> 取得選單項
+
+「ClearMenu」 -> 清除選單
+
+修正「CheckWebView2Exist」 邏輯，可在類別引用外層中（如表單或其它方法中）呼叫來檢測目前系統是否有安裝 WebView2 的執行時刻。詳情請參考 DEMO：基礎瀏覽版.scx
+
+新增「DLLPath」指定 Webview2.DLL 所在路徑以方便部署自己的檔案結構。
+
+強烈建議在整個應用 EXE 啟動前將 Getenv("TEMP") 目錄下的 FXP 檔案進行刪除。
+
+修正以下屬性在設計環境中更改執行時將啟用，注意一個 EXE 環境將共用同一個屬性設定
